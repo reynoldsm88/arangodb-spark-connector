@@ -22,23 +22,10 @@
 
 package com.arangodb.spark
 
-import org.apache.spark.SparkConf
-import org.apache.spark.SparkContext
-import org.apache.spark.sql.SQLContext
-import org.apache.spark.sql.catalyst.encoders.ExpressionEncoder
-import org.scalatest.BeforeAndAfterAll
-import org.scalatest.BeforeAndAfterEach
-import org.scalatest.FunSuite
-import org.scalatest.Matchers
-import collection.JavaConverters._
-import com.arangodb.ArangoDB
-import com.arangodb.ArangoDBException
-import com.arangodb.velocypack.VPackBuilder
-import com.arangodb.velocypack.ValueType
-import scala.reflect.ClassTag
-import com.arangodb.spark.rdd.partition.ArangoPartitionerSinglePartition
-import org.scalatest.Ignore
+import com.arangodb.{ArangoDB, ArangoDBException}
 import com.arangodb.entity.LoadBalancingStrategy
+import com.arangodb.spark.rdd.partition.ArangoPartitionerSinglePartition
+import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, FunSuite, Matchers}
 
 class ArangoSparkReadTest extends FunSuite with Matchers with BeforeAndAfterAll with BeforeAndAfterEach with SharedSparkContext {
 

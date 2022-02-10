@@ -22,98 +22,106 @@
 
 package com.arangodb.spark
 
-import javax.net.ssl.SSLContext
 import com.arangodb.Protocol
 import com.arangodb.entity.LoadBalancingStrategy
+import com.arangodb.util.ArangoSerialization
 
-case class WriteOptions(override val database: String = "_system",
-                        val method: WriteOptions.Method = WriteOptions.INSERT,
-                        override val hosts: Option[String] = None,
-                        override val user: Option[String] = None,
-                        override val password: Option[String] = None,
-                        override val useSsl: Option[Boolean] = None,
-                        override val sslKeyStoreFile: Option[String] = None,
-                        override val sslPassPhrase: Option[String] = None,
-                        override val sslProtocol: Option[String] = None,
-                        override val protocol: Option[Protocol] = None,
-                        override val maxConnections: Option[Int] = None,
-                        override val acquireHostList: Option[Boolean] = None,
-                        override val acquireHostListInterval: Option[Int] = None,
-                        override val loadBalancingStrategy: Option[LoadBalancingStrategy] = None) extends ArangoOptions {
-  import WriteOptions._
+case class WriteOptions( override val database : String = "_system",
+                         val method : WriteOptions.Method = WriteOptions.INSERT,
+                         override val hosts : Option[ String ] = None,
+                         override val user : Option[ String ] = None,
+                         override val password : Option[ String ] = None,
+                         override val useSsl : Option[ Boolean ] = None,
+                         override val sslKeyStoreFile : Option[ String ] = None,
+                         override val sslPassPhrase : Option[ String ] = None,
+                         override val sslProtocol : Option[ String ] = None,
+                         override val protocol : Option[ Protocol ] = None,
+                         override val maxConnections : Option[ Int ] = None,
+                         override val acquireHostList : Option[ Boolean ] = None,
+                         override val acquireHostListInterval : Option[ Int ] = None,
+                         override val loadBalancingStrategy : Option[ LoadBalancingStrategy ] = None,
+                         override val serialization : Option[ ArangoSerialization ] = None ) extends ArangoOptions {
 
-  def this() = this(database = "_system")
+    import com.arangodb.spark.WriteOptions._
 
-  def database(database: String): WriteOptions = copy(database = database)
+    def this( ) = this( database = "_system" )
 
-  def method(method: Method): WriteOptions = copy(method = method)
+    def database( database : String ) : WriteOptions = copy( database = database )
 
-  def hosts(hosts: String): WriteOptions = copy(hosts = Some(hosts))
+    def method( method : Method ) : WriteOptions = copy( method = method )
 
-  def user(user: String): WriteOptions = copy(user = Some(user))
+    def hosts( hosts : String ) : WriteOptions = copy( hosts = Some( hosts ) )
 
-  def password(password: String): WriteOptions = copy(password = Some(password))
+    def user( user : String ) : WriteOptions = copy( user = Some( user ) )
 
-  def useSsl(useSsl: Boolean): WriteOptions = copy(useSsl = Some(useSsl))
+    def password( password : String ) : WriteOptions = copy( password = Some( password ) )
 
-  def sslKeyStoreFile(sslKeyStoreFile: String): WriteOptions = copy(sslKeyStoreFile = Some(sslKeyStoreFile))
+    def useSsl( useSsl : Boolean ) : WriteOptions = copy( useSsl = Some( useSsl ) )
 
-  def sslPassPhrase(sslPassPhrase: String): WriteOptions = copy(sslPassPhrase = Some(sslPassPhrase))
+    def sslKeyStoreFile( sslKeyStoreFile : String ) : WriteOptions = copy( sslKeyStoreFile = Some( sslKeyStoreFile ) )
 
-  def sslProtocol(sslProtocol: String): WriteOptions = copy(sslProtocol = Some(sslProtocol))
+    def sslPassPhrase( sslPassPhrase : String ) : WriteOptions = copy( sslPassPhrase = Some( sslPassPhrase ) )
 
-  def protocol(protocol: Protocol): WriteOptions = copy(protocol = Some(protocol))
+    def sslProtocol( sslProtocol : String ) : WriteOptions = copy( sslProtocol = Some( sslProtocol ) )
 
-  def maxConnections(maxConnections: Int): WriteOptions = copy(maxConnections = Some(maxConnections))
+    def protocol( protocol : Protocol ) : WriteOptions = copy( protocol = Some( protocol ) )
 
-  def acquireHostList(acquireHostList: Boolean): WriteOptions = copy(acquireHostList = Some(acquireHostList))
+    def maxConnections( maxConnections : Int ) : WriteOptions = copy( maxConnections = Some( maxConnections ) )
 
-  def acquireHostListInterval(acquireHostListInterval: Int): WriteOptions = copy(acquireHostListInterval = Some(acquireHostListInterval))
+    def acquireHostList( acquireHostList : Boolean ) : WriteOptions = copy( acquireHostList = Some( acquireHostList ) )
 
-  def loadBalancingStrategy(loadBalancingStrategy: LoadBalancingStrategy): WriteOptions = copy(loadBalancingStrategy = Some(loadBalancingStrategy))
+    def acquireHostListInterval( acquireHostListInterval : Int ) : WriteOptions = copy( acquireHostListInterval = Some( acquireHostListInterval ) )
 
-  def copy(database: String = database,
-           method: Method = method,
-           hosts: Option[String] = hosts,
-           user: Option[String] = user,
-           password: Option[String] = password,
-           useSsl: Option[Boolean] = useSsl,
-           sslKeyStoreFile: Option[String] = sslKeyStoreFile,
-           sslPassPhrase: Option[String] = sslPassPhrase,
-           sslProtocol: Option[String] = sslProtocol,
-           protocol: Option[Protocol] = protocol,
-           maxConnections: Option[Int] = maxConnections,
-           acquireHostList: Option[Boolean] = acquireHostList,
-           acquireHostListInterval: Option[Int] = acquireHostListInterval,
-           loadBalancingStrategy: Option[LoadBalancingStrategy] = loadBalancingStrategy): WriteOptions = {
-    WriteOptions(database, method, hosts, user, password, useSsl, sslKeyStoreFile, sslPassPhrase, sslProtocol, protocol, maxConnections, acquireHostList, acquireHostListInterval, loadBalancingStrategy)
-  }
+    def loadBalancingStrategy( loadBalancingStrategy : LoadBalancingStrategy ) : WriteOptions = copy( loadBalancingStrategy = Some( loadBalancingStrategy ) )
+
+    def serialization( serialization : ArangoSerialization ) : WriteOptions = copy( serialization = Some( serialization ) )
+
+    def copy( database : String = database,
+              method : Method = method,
+              hosts : Option[ String ] = hosts,
+              user : Option[ String ] = user,
+              password : Option[ String ] = password,
+              useSsl : Option[ Boolean ] = useSsl,
+              sslKeyStoreFile : Option[ String ] = sslKeyStoreFile,
+              sslPassPhrase : Option[ String ] = sslPassPhrase,
+              sslProtocol : Option[ String ] = sslProtocol,
+              protocol : Option[ Protocol ] = protocol,
+              maxConnections : Option[ Int ] = maxConnections,
+              acquireHostList : Option[ Boolean ] = acquireHostList,
+              acquireHostListInterval : Option[ Int ] = acquireHostListInterval,
+              loadBalancingStrategy : Option[ LoadBalancingStrategy ] = loadBalancingStrategy,
+              serialization : Option[ ArangoSerialization ] = serialization ) : WriteOptions = {
+        WriteOptions( database, method, hosts, user, password, useSsl, sslKeyStoreFile, sslPassPhrase, sslProtocol, protocol, maxConnections, acquireHostList, acquireHostListInterval, loadBalancingStrategy, serialization )
+    }
 
 }
 
 object WriteOptions {
 
-  /**
-   * method to save documents to arangodb
-   */
-  sealed trait Method
+    /**
+     * method to save documents to arangodb
+     */
+    sealed trait Method
 
-  /**
-   * save documents by inserting
-   * @see [[com.arangodb.ArangoCollection#insertDocuments(java.util.Collection)]]
-   */
-  case object INSERT extends Method
+    /**
+     * save documents by inserting
+     *
+     * @see [[com.arangodb.ArangoCollection#insertDocuments(java.util.Collection)]]
+     */
+    case object INSERT extends Method
 
-  /**
-   * save documents by updating
-   * @see [[com.arangodb.ArangoCollection#updateDocuments(java.util.Collection)]]
-   */
-  case object UPDATE extends Method
+    /**
+     * save documents by updating
+     *
+     * @see [[com.arangodb.ArangoCollection#updateDocuments(java.util.Collection)]]
+     */
+    case object UPDATE extends Method
 
-  /**
-   * save documents by replacing
-   * @see [[com.arangodb.ArangoCollection#replaceDocuments(java.util.Collection)]]
-   */
-  case object REPLACE extends Method
+    /**
+     * save documents by replacing
+     *
+     * @see [[com.arangodb.ArangoCollection#replaceDocuments(java.util.Collection)]]
+     */
+    case object REPLACE extends Method
 
 }

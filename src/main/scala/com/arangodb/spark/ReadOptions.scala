@@ -22,76 +22,77 @@
 
 package com.arangodb.spark
 
-import com.arangodb.spark.rdd.partition.ArangoDefaultPartitioner
-import com.arangodb.spark.rdd.partition.ArangoPartitioner
-
-import javax.net.ssl.SSLContext
-import javax.net.ssl.SSLProtocolException
 import com.arangodb.Protocol
 import com.arangodb.entity.LoadBalancingStrategy
+import com.arangodb.spark.rdd.partition.{ArangoDefaultPartitioner, ArangoPartitioner}
+import com.arangodb.util.{ArangoSerialization, ArangoSerializer}
 
-case class ReadOptions(override val database: String = "_system",
-                       val collection: String = null,
-                       val partitioner: ArangoPartitioner = new ArangoDefaultPartitioner(),
-                       override val hosts: Option[String] = None,
-                       override val user: Option[String] = None,
-                       override val password: Option[String] = None,
-                       override val useSsl: Option[Boolean] = None,
-                       override val sslKeyStoreFile: Option[String] = None,
-                       override val sslPassPhrase: Option[String] = None,
-                       override val sslProtocol: Option[String] = None,
-                       override val protocol: Option[Protocol] = None,
-                       override val maxConnections: Option[Int] = None,
-                       override val acquireHostList: Option[Boolean] = None,
-                       override val acquireHostListInterval: Option[Int] = None,
-                       override val loadBalancingStrategy: Option[LoadBalancingStrategy] = None) extends ArangoOptions {
+case class ReadOptions( override val database : String = "_system",
+                        val collection : String = null,
+                        val partitioner : ArangoPartitioner = new ArangoDefaultPartitioner(),
+                        override val hosts : Option[ String ] = None,
+                        override val user : Option[ String ] = None,
+                        override val password : Option[ String ] = None,
+                        override val useSsl : Option[ Boolean ] = None,
+                        override val sslKeyStoreFile : Option[ String ] = None,
+                        override val sslPassPhrase : Option[ String ] = None,
+                        override val sslProtocol : Option[ String ] = None,
+                        override val protocol : Option[ Protocol ] = None,
+                        override val maxConnections : Option[ Int ] = None,
+                        override val acquireHostList : Option[ Boolean ] = None,
+                        override val acquireHostListInterval : Option[ Int ] = None,
+                        override val loadBalancingStrategy : Option[ LoadBalancingStrategy ] = None,
+                        override val serialization : Option[ ArangoSerialization ] = None ) extends ArangoOptions {
 
-  def this() = this(database = "_system")
+    def this( ) = this( database = "_system" )
 
-  def database(database: String): ReadOptions = copy(database = database)
+    def database( database : String ) : ReadOptions = copy( database = database )
 
-  def collection(collection: String): ReadOptions = copy(collection = collection)
+    def collection( collection : String ) : ReadOptions = copy( collection = collection )
 
-  def hosts(hosts: String): ReadOptions = copy(hosts = Some(hosts))
+    def hosts( hosts : String ) : ReadOptions = copy( hosts = Some( hosts ) )
 
-  def user(user: String): ReadOptions = copy(user = Some(user))
+    def user( user : String ) : ReadOptions = copy( user = Some( user ) )
 
-  def password(password: String): ReadOptions = copy(password = Some(password))
+    def password( password : String ) : ReadOptions = copy( password = Some( password ) )
 
-  def useSsl(useSsl: Boolean): ReadOptions = copy(useSsl = Some(useSsl))
+    def useSsl( useSsl : Boolean ) : ReadOptions = copy( useSsl = Some( useSsl ) )
 
-  def sslKeyStoreFile(sslKeyStoreFile: String): ReadOptions = copy(sslKeyStoreFile = Some(sslKeyStoreFile))
+    def sslKeyStoreFile( sslKeyStoreFile : String ) : ReadOptions = copy( sslKeyStoreFile = Some( sslKeyStoreFile ) )
 
-  def sslPassPhrase(sslPassPhrase: String): ReadOptions = copy(sslPassPhrase = Some(sslPassPhrase))
+    def sslPassPhrase( sslPassPhrase : String ) : ReadOptions = copy( sslPassPhrase = Some( sslPassPhrase ) )
 
-  def sslProtocol(sslProtocol: String): ReadOptions = copy(sslProtocol = Some(sslProtocol))
+    def sslProtocol( sslProtocol : String ) : ReadOptions = copy( sslProtocol = Some( sslProtocol ) )
 
-  def protocol(protocol: Protocol): ReadOptions = copy(protocol = Some(protocol))
-  
-  def maxConnections(maxConnections: Int): ReadOptions = copy(maxConnections = Some(maxConnections))
-  
-  def acquireHostList(acquireHostList: Boolean): ReadOptions = copy(acquireHostList = Some(acquireHostList))
-  
-  def acquireHostListInterval(acquireHostListInterval: Int): ReadOptions = copy(acquireHostListInterval = Some(acquireHostListInterval))
-  
-  def loadBalancingStrategy(loadBalancingStrategy: LoadBalancingStrategy): ReadOptions = copy(loadBalancingStrategy = Some(loadBalancingStrategy))
+    def protocol( protocol : Protocol ) : ReadOptions = copy( protocol = Some( protocol ) )
 
-  def copy(database: String = database,
-           collection: String = collection,
-           partitioner: ArangoPartitioner = partitioner,
-           hosts: Option[String] = hosts,
-           user: Option[String] = user,
-           password: Option[String] = password,
-           useSsl: Option[Boolean] = useSsl,
-           sslKeyStoreFile: Option[String] = sslKeyStoreFile,
-           sslPassPhrase: Option[String] = sslPassPhrase,
-           sslProtocol: Option[String] = sslProtocol,
-           protocol: Option[Protocol] = protocol,
-           maxConnections: Option[Int] = maxConnections,
-           acquireHostList: Option[Boolean] = acquireHostList,
-           acquireHostListInterval: Option[Int] = acquireHostListInterval,
-           loadBalancingStrategy: Option[LoadBalancingStrategy] = loadBalancingStrategy): ReadOptions = {
-    ReadOptions(database, collection, partitioner, hosts, user, password, useSsl, sslKeyStoreFile, sslPassPhrase, sslProtocol, protocol, maxConnections, acquireHostList, acquireHostListInterval, loadBalancingStrategy)
-  }
+    def maxConnections( maxConnections : Int ) : ReadOptions = copy( maxConnections = Some( maxConnections ) )
+
+    def acquireHostList( acquireHostList : Boolean ) : ReadOptions = copy( acquireHostList = Some( acquireHostList ) )
+
+    def acquireHostListInterval( acquireHostListInterval : Int ) : ReadOptions = copy( acquireHostListInterval = Some( acquireHostListInterval ) )
+
+    def loadBalancingStrategy( loadBalancingStrategy : LoadBalancingStrategy ) : ReadOptions = copy( loadBalancingStrategy = Some( loadBalancingStrategy ) )
+
+    def serialization( serializer : ArangoSerialization ) : ReadOptions = copy( serialization = Some( serializer ) )
+
+    def copy( database : String = database,
+              collection : String = collection,
+              partitioner : ArangoPartitioner = partitioner,
+              hosts : Option[ String ] = hosts,
+              user : Option[ String ] = user,
+              password : Option[ String ] = password,
+              useSsl : Option[ Boolean ] = useSsl,
+              sslKeyStoreFile : Option[ String ] = sslKeyStoreFile,
+              sslPassPhrase : Option[ String ] = sslPassPhrase,
+              sslProtocol : Option[ String ] = sslProtocol,
+              protocol : Option[ Protocol ] = protocol,
+              maxConnections : Option[ Int ] = maxConnections,
+              acquireHostList : Option[ Boolean ] = acquireHostList,
+              acquireHostListInterval : Option[ Int ] = acquireHostListInterval,
+              loadBalancingStrategy : Option[ LoadBalancingStrategy ] = loadBalancingStrategy,
+              serialization : Option[ ArangoSerialization ] = serialization ) : ReadOptions = {
+        ReadOptions( database, collection, partitioner, hosts, user, password, useSsl, sslKeyStoreFile, sslPassPhrase, sslProtocol, protocol, maxConnections, acquireHostList, acquireHostListInterval, loadBalancingStrategy, serialization )
+    }
 
 }

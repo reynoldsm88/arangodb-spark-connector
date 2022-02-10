@@ -24,15 +24,15 @@ package com.arangodb
 
 import scala.util.Try
 import org.apache.spark.SparkConf
-import java.security.KeyStore
 
+import java.security.KeyStore
 import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManagerFactory
 import java.io.FileInputStream
-
 import com.arangodb.entity.LoadBalancingStrategy
 import com.arangodb.mapping.ArangoJack
+import com.arangodb.util.{ArangoSerialization, ArangoSerializer}
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule
@@ -53,6 +53,18 @@ package object spark {
   val PropertyAcquireHostListInterval = "arangodb.acquireHostListInterval"
   val PropertyLoadBalancingStrategy = "arangodb.loadBalancingStrategy"
 
+  val defaultSerializer : ArangoSerialization = {
+    val serializer = new ArangoJack()
+    serializer.configure(it => {
+      it
+      .registerModule(DefaultScalaModule)
+      .registerModule(new ParameterNamesModule)
+      .registerModule(new Jdk8Module)
+      .registerModule(new JavaTimeModule)
+    } )
+    serializer
+  }
+
   private[spark] def createReadOptions(options: ReadOptions, sc: SparkConf): ReadOptions = {
     options.copy(
       hosts = options.hosts.orElse(some(sc.get(PropertyHosts, null))),
@@ -66,7 +78,8 @@ package object spark {
       maxConnections = options.maxConnections.orElse(some(Try(sc.get(PropertyMaxConnections, null).toInt).getOrElse(1))),
       acquireHostList = options.acquireHostList.orElse(some(Try(sc.get(PropertyAcquireHostList, null).toBoolean).getOrElse(false))),
       acquireHostListInterval = options.acquireHostListInterval.orElse(some(Try(sc.get(PropertyAcquireHostListInterval, null).toInt).getOrElse(60000))),
-      loadBalancingStrategy = options.loadBalancingStrategy.orElse(some(LoadBalancingStrategy.valueOf(sc.get(PropertyLoadBalancingStrategy, "NONE")))))
+      loadBalancingStrategy = options.loadBalancingStrategy.orElse(some(LoadBalancingStrategy.valueOf(sc.get(PropertyLoadBalancingStrategy, "NONE")))),
+      serialization = options.serialization.orElse( Some( defaultSerializer ) ) )
   }
 
   private[spark] def createWriteOptions(options: WriteOptions, sc: SparkConf): WriteOptions = {
@@ -82,18 +95,12 @@ package object spark {
       maxConnections = options.maxConnections.orElse(some(Try(sc.get(PropertyMaxConnections, null).toInt).getOrElse(1))),
       acquireHostList = options.acquireHostList.orElse(some(Try(sc.get(PropertyAcquireHostList, null).toBoolean).getOrElse(false))),
       acquireHostListInterval = options.acquireHostListInterval.orElse(some(Try(sc.get(PropertyAcquireHostListInterval, null).toInt).getOrElse(60000))),
-      loadBalancingStrategy = options.loadBalancingStrategy.orElse(some(LoadBalancingStrategy.valueOf(sc.get(PropertyLoadBalancingStrategy, "NONE")))))
+      loadBalancingStrategy = options.loadBalancingStrategy.orElse(some(LoadBalancingStrategy.valueOf(sc.get(PropertyLoadBalancingStrategy, "NONE")))),
+      serialization = options.serialization.orElse( Some( defaultSerializer ) ) )
   }
 
   private[spark] def createArangoBuilder(options: ArangoOptions): ArangoDB.Builder = {
-    val serializer = new ArangoJack()
-    serializer.configure(it => it
-      .registerModule(DefaultScalaModule)
-      .registerModule(new ParameterNamesModule)
-      .registerModule(new Jdk8Module)
-      .registerModule(new JavaTimeModule)
-    )
-    val builder = new ArangoDB.Builder().serializer(serializer)
+    val builder = new ArangoDB.Builder().serializer( options.serialization.get )
     options.hosts.foreach { hosts(_).foreach(host => builder.host(host._1, host._2)) }
     options.user.foreach { builder.user(_) }
     options.password.foreach { builder.password(_) }
@@ -126,13 +133,13 @@ package object spark {
 
   private def some(value: Int): Option[Int] =
     Some(value)
-    
+
   private def some(value: Boolean): Option[Boolean] =
     Some(value)
 
   private def some(value: Protocol): Option[Protocol] =
     Some(value)
-    
+
   private def some(value: LoadBalancingStrategy): Option[LoadBalancingStrategy] =
     Some(value)
 
